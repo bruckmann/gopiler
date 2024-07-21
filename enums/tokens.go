@@ -31,3 +31,15 @@ const (
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 )
+
+var KEYWORDS = map[string]TokenType{
+	"fn": FUNCTION,
+	"let": LET,
+}
+
+func IsKeywordOrIdentifier(value string) TokenType {
+	if token, ok := KEYWORDS[value]; ok {
+		return token
+	}
+	return IDENTIFIER
+}
