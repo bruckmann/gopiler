@@ -1,6 +1,8 @@
 package scanner
 
 import (
+	"fmt"
+
 	"github.com/bruckmann/gopiler/enums"
 	e "github.com/bruckmann/gopiler/enums"
 )
@@ -43,11 +45,28 @@ func (s *Scanner) isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z'||'A' <= ch && ch <= 'Z'|| ch == '_'
 }
 
+// Checking in the ASCII table for int
+func (s *Scanner) isInt(ch byte) bool {
+	fmt.Println(ch)
+	return int(ch) >= 48 && int(ch) <= 57
+}
+
 func (s *Scanner) readIdentifier() string {
 	position := s.position
 	
 
 	for s.isLetter(s.currentChar) {
+			s.readChar()
+	}
+
+	return s.input[position:s.position]
+}
+
+func (s *Scanner) readIntegers() string {
+	position := s.position
+	
+
+	for s.isInt(s.currentChar) {
 			s.readChar()
 	}
 
@@ -84,6 +103,9 @@ func (s *Scanner) NextToken() e.Token {
 		if s.isLetter(s.currentChar){
 			token.Literal = s.readIdentifier()
 			token.Type = e.IsKeywordOrIdentifier(token.Literal)
+		} else if s.isInt(s.currentChar) {
+			token.Literal = s.readIntegers()
+			token.Type = e.INT
 		} else {
 			token = s.newToken(enums.ILLEGAL, s.currentChar)
 		}
