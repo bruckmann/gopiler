@@ -1,7 +1,6 @@
 package scanner
 
 import (
-
 	"github.com/bruckmann/gopiler/enums"
 	e "github.com/bruckmann/gopiler/enums"
 )
@@ -12,7 +11,6 @@ type Scanner struct {
 	readPosition int
 	currentChar  byte
 }
-
 
 type guardianFunction func(byte) bool
 
@@ -55,10 +53,9 @@ func (s *Scanner) readValue(gf guardianFunction) string {
 
 	position := s.position
 
-	for gf(s.currentChar){
+	for gf(s.currentChar) {
 		s.readChar()
 	}
-
 
 	return s.input[position:s.position]
 }
