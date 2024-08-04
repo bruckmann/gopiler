@@ -1,7 +1,6 @@
 package scanner
 
 import (
-	"fmt"
 
 	"github.com/bruckmann/gopiler/enums"
 	e "github.com/bruckmann/gopiler/enums"
@@ -14,6 +13,9 @@ type Scanner struct {
 	currentChar  byte
 }
 
+
+type guardianFunction func(byte) bool
+
 func New(input string) *Scanner {
 	s := &Scanner{input: input}
 	s.readChar()
@@ -24,7 +26,7 @@ func New(input string) *Scanner {
 // This function has the responsability to get the next char to read
 // Case we reach the end of the file set current char to zero (ASCII null)
 func (s *Scanner) readChar() {
-		s.currentChar = 0
+	s.currentChar = 0
 	if s.readPosition >= len(s.input) {
 	} else {
 		s.currentChar = s.input[s.readPosition]
@@ -42,40 +44,38 @@ func (s *Scanner) newToken(tokenType e.TokenType, ch byte) e.Token {
 }
 
 func (s *Scanner) isLetter(ch byte) bool {
-	return 'a' <= ch && ch <= 'z'||'A' <= ch && ch <= 'Z'|| ch == '_'
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
 
-// Checking in the ASCII table for int
-func (s *Scanner) isInt(ch byte) bool {
-	fmt.Println(ch)
-	return int(ch) >= 48 && int(ch) <= 57
+func (s *Scanner) isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }
 
-func (s *Scanner) readIdentifier() string {
+func (s *Scanner) readValue(gf guardianFunction) string {
+
 	position := s.position
-	
 
-	for s.isLetter(s.currentChar) {
-			s.readChar()
+	for gf(s.currentChar){
+		s.readChar()
 	}
+
 
 	return s.input[position:s.position]
 }
 
-func (s *Scanner) readIntegers() string {
-	position := s.position
-	
-
-	for s.isInt(s.currentChar) {
-			s.readChar()
+func (s *Scanner) eatWhitespaces() {
+	for s.currentChar == ' ' ||
+		s.currentChar == '\n' ||
+		s.currentChar == '\t' ||
+		s.currentChar == '\r' {
+		s.readChar()
 	}
-
-	return s.input[position:s.position]
 }
-
 
 func (s *Scanner) NextToken() e.Token {
 	var token e.Token
+
+	s.eatWhitespaces()
 
 	switch s.currentChar {
 	case '=':
@@ -96,16 +96,20 @@ func (s *Scanner) NextToken() e.Token {
 		token = s.newToken(e.SEMICOLON, s.currentChar)
 	case ',':
 		token = s.newToken(e.COMMA, s.currentChar)
-	case '0':
+	case 0:
 		token.Literal = ""
 		token.Type = e.EOF
-	default: 
-		if s.isLetter(s.currentChar){
-			token.Literal = s.readIdentifier()
+	default:
+		if s.isLetter(s.currentChar) {
+			token.Literal = s.readValue(s.isLetter)
 			token.Type = e.IsKeywordOrIdentifier(token.Literal)
-		} else if s.isInt(s.currentChar) {
-			token.Literal = s.readIntegers()
+
+			return token
+		} else if s.isDigit(s.currentChar) {
+			token.Literal = s.readValue(s.isDigit)
 			token.Type = e.INT
+
+			return token
 		} else {
 			token = s.newToken(enums.ILLEGAL, s.currentChar)
 		}

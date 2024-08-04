@@ -1,6 +1,7 @@
 package scanner
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/bruckmann/gopiler/enums"
@@ -36,15 +37,15 @@ func TestNextToken(t *testing.T) {
 		{enums.IDENTIFIER, "add"},
 		{enums.ASSIGN, "="},
 		{enums.FUNCTION, "fn"},
-		{enums.LEFT_BRACE, "("},
+		{enums.LEFT_PARENT, "("},
 		{enums.IDENTIFIER, "a"},
 		{enums.COMMA, ","},
 		{enums.IDENTIFIER, "b"},
 		{enums.RIGHT_PARENT, ")"},
 		{enums.LEFT_BRACE, "{"},
-		{enums.INT, "5"},
+		{enums.IDENTIFIER, "a"},
 		{enums.PLUS, "+"},
-		{enums.INT, "10"},
+		{enums.IDENTIFIER, "b"},
 		{enums.SEMICOLON, ";"},
 		{enums.RIGHT_BRACE, "}"},
 		{enums.SEMICOLON, ";"},
@@ -52,10 +53,11 @@ func TestNextToken(t *testing.T) {
 		{enums.IDENTIFIER, "result"},
 		{enums.ASSIGN, "="},
 		{enums.IDENTIFIER, "add"},
-		{enums.LEFT_BRACE, "("},
+		{enums.LEFT_PARENT, "("},
 		{enums.IDENTIFIER, "five"},
 		{enums.COMMA, ","},
 		{enums.IDENTIFIER, "ten"},
+		{enums.RIGHT_PARENT, ")"},
 		{enums.SEMICOLON, ";"},
 		{enums.EOF, ""},
 	}
@@ -66,6 +68,7 @@ func TestNextToken(t *testing.T) {
 		token := s.NextToken()
 
 		if token.Type != tt.expectedType {
+			fmt.Println(token.Literal)
 			t.Fatalf("test %d: expected type %q, got %q", i, tt.expectedType, token.Type)
 		}
 
