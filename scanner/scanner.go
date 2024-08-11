@@ -41,6 +41,20 @@ func (s *Scanner) newToken(tokenType e.TokenType, ch byte) e.Token {
 	}
 }
 
+func (s *Scanner) newDoubleCharToken(tokenType e.TokenType, literal string) e.Token {
+	return e.Token{
+		Type:    tokenType,
+		Literal: literal,
+	}
+}
+
+func (s *Scanner) createDoubleCharToken(tokenType e.TokenType) e.Token {
+		ch := s.currentChar
+		s.readChar()
+		literal := string(ch) + string(s.currentChar)
+		return s.newDoubleCharToken(tokenType, literal) 
+}
+
 func (s *Scanner) isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
@@ -87,10 +101,7 @@ func (s *Scanner) NextToken() e.Token {
 	switch s.currentChar {
 	case '=':
 		if(s.peekChar() == '='){
-			ch := s.currentChar
-			s.readChar()
-			literal := string(ch) + string(s.currentChar)
-			token = e.Token{Type: e.EQUAL, Literal: literal} 
+			token = s.createDoubleCharToken(e.EQUAL) 
 		} else {
 			token = s.newToken(e.ASSIGN, s.currentChar)
 		}
@@ -114,10 +125,7 @@ func (s *Scanner) NextToken() e.Token {
 		token = s.newToken(e.SLASH, s.currentChar)
 	case '!':
 		if(s.peekChar() == '='){
-			ch := s.currentChar
-			s.readChar()
-			literal := string(ch) + string(s.currentChar)
-			token = e.Token{Type: e.NOT_EQUAL, Literal: literal} 
+			token = s.createDoubleCharToken(e.NOT_EQUAL)
 		} else {
 			token = s.newToken(e.BANG, s.currentChar)
 		}
