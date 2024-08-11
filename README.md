@@ -7,15 +7,14 @@ An interpreter for Summer language written in Golang.
 ### Syntax
 
 ```summer
-    `let five = 5;
+ let five = 5;
+ let ten = 10;
 
-	 let ten = 10;
+ let add = fn(a, b) {
+   a + b;
+  };
 
-	 let add = fn(a, b) {
-		a + b;
-	};
-
-	let result = add(five, ten);
+ let result = add(five, ten);
 ```
 
 ### Features
