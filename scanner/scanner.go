@@ -60,6 +60,16 @@ func (s *Scanner) readValue(gf guardianFunction) string {
 	return s.input[position:s.position]
 }
 
+func (s *Scanner) peekChar() byte{
+
+	if s.readPosition >= len(s.input){
+		return 0
+	} else {
+		return s.input[s.readPosition]
+	}
+
+}
+
 func (s *Scanner) eatWhitespaces() {
 	for s.currentChar == ' ' ||
 		s.currentChar == '\n' ||
@@ -76,7 +86,14 @@ func (s *Scanner) NextToken() e.Token {
 
 	switch s.currentChar {
 	case '=':
-		token = s.newToken(e.ASSIGN, s.currentChar)
+		if(s.peekChar() == '='){
+			ch := s.currentChar
+			s.readChar()
+			literal := string(ch) + string(s.currentChar)
+			token = e.Token{Type: e.EQUAL, Literal: literal} 
+		} else {
+			token = s.newToken(e.ASSIGN, s.currentChar)
+		}
 	case '+':
 		token = s.newToken(e.PLUS, s.currentChar)
 	case '-':
@@ -93,6 +110,23 @@ func (s *Scanner) NextToken() e.Token {
 		token = s.newToken(e.SEMICOLON, s.currentChar)
 	case ',':
 		token = s.newToken(e.COMMA, s.currentChar)
+	case '/':
+		token = s.newToken(e.SLASH, s.currentChar)
+	case '!':
+		if(s.peekChar() == '='){
+			ch := s.currentChar
+			s.readChar()
+			literal := string(ch) + string(s.currentChar)
+			token = e.Token{Type: e.NOT_EQUAL, Literal: literal} 
+		} else {
+			token = s.newToken(e.BANG, s.currentChar)
+		}
+	case '>':
+		token = s.newToken(e.GT, s.currentChar)
+	case '<':
+		token = s.newToken(e.LT, s.currentChar)
+	case '*':
+		token = s.newToken(e.ASTERISK, s.currentChar)
 	case 0:
 		token.Literal = ""
 		token.Type = e.EOF
@@ -100,15 +134,13 @@ func (s *Scanner) NextToken() e.Token {
 		if s.isLetter(s.currentChar) {
 			token.Literal = s.readValue(s.isLetter)
 			token.Type = e.IsKeywordOrIdentifier(token.Literal)
-
 			return token
 		} else if s.isDigit(s.currentChar) {
-			token.Literal = s.readValue(s.isDigit)
-			token.Type = e.INT
-
-			return token
+			  token.Literal = s.readValue(s.isDigit)
+				token.Type = e.INT
+				return token
 		} else {
-			token = s.newToken(enums.ILLEGAL, s.currentChar)
+				token = s.newToken(enums.ILLEGAL, s.currentChar)
 		}
 	}
 

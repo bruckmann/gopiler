@@ -17,6 +17,20 @@ func TestNextToken(t *testing.T) {
 	};
 
 	let result = add(five, ten);
+	
+	!-/*5;
+
+	5 < 10 > 5;
+
+	if(5 < 10){
+		return true;
+	} else {
+		return false;
+	}
+
+	10 == 10;
+	9 != 10;
+
 	`
 
 	tests := []struct {
@@ -58,6 +72,43 @@ func TestNextToken(t *testing.T) {
 		{enums.COMMA, ","},
 		{enums.IDENTIFIER, "ten"},
 		{enums.RIGHT_PARENT, ")"},
+		{enums.SEMICOLON, ";"},
+		{enums.BANG, "!"},
+		{enums.MINUS, "-"},
+		{enums.SLASH, "/"},
+		{enums.ASTERISK, "*"},
+		{enums.INT, "5"},
+		{enums.SEMICOLON, ";"},
+		{enums.INT, "5"},
+		{enums.LT, "<"},
+		{enums.INT, "10"},
+		{enums.GT, ">"},
+		{enums.INT, "5"},
+		{enums.SEMICOLON, ";"},
+		{enums.IF, "if"},
+		{enums.LEFT_PARENT, "("},
+		{enums.INT, "5"},
+		{enums.LT, "<"},
+		{enums.INT, "10"},
+		{enums.RIGHT_PARENT, ")"},
+		{enums.LEFT_BRACE, "{"},
+		{enums.RETURN, "return"},
+		{enums.TRUE, "true"},
+		{enums.SEMICOLON, ";"},
+		{enums.RIGHT_BRACE, "}"},
+		{enums.ELSE, "else"},
+		{enums.LEFT_BRACE, "{"},
+		{enums.RETURN, "return"},
+		{enums.FALSE, "false"},
+		{enums.SEMICOLON, ";"},
+		{enums.RIGHT_BRACE, "}"},
+		{enums.INT, "10"},
+		{enums.EQUAL, "=="},
+		{enums.INT, "10"},
+		{enums.SEMICOLON, ";"},
+		{enums.INT, "9"},
+		{enums.NOT_EQUAL, "!="},
+		{enums.INT, "10"},
 		{enums.SEMICOLON, ";"},
 		{enums.EOF, ""},
 	}
