@@ -2,36 +2,19 @@ package scanner
 
 import (
 	"fmt"
+	"os"
 	"testing"
 
 	"github.com/bruckmann/gopiler/enums"
 )
 
 func TestNextToken(t *testing.T) {
-	input := `let five = 5;
+	filePath := "../testfiles/tokentest.sm"
+	input, err := os.ReadFile(filePath)
 
-	 let ten = 10;
-
-	 let add = fn(a, b) {
-		a + b;
-	};
-
-	let result = add(five, ten);
-	
-	!-/*5;
-
-	5 < 10 > 5;
-
-	if(5 < 10){
-		return true;
-	} else {
-		return false;
+	if err != nil {
+		t.Fatal(err)
 	}
-
-	10 == 10;
-	9 != 10;
-
-	`
 
 	tests := []struct {
 		expectedType    enums.TokenType
@@ -113,7 +96,7 @@ func TestNextToken(t *testing.T) {
 		{enums.EOF, ""},
 	}
 
-	s := New(input)
+	s := New(string(input))
 
 	for i, tt := range tests {
 		token := s.NextToken()
