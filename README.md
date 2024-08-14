@@ -30,6 +30,12 @@ An interpreter for Summer language written in Golang.
 - Built-in functions
 - arithmetic expressions
 
+### To use the interactive mode just run the command:
+
+```shell 
+  go run main.go
+```
+
 The language and the interpreter was done based on the book "Writing An Interpreter in Go" from Thorsten Ball.
 
 
