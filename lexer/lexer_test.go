@@ -1,4 +1,4 @@
-package scanner
+package lexer
 
 import (
 	"fmt"
@@ -96,10 +96,10 @@ func TestNextToken(t *testing.T) {
 		{enums.EOF, ""},
 	}
 
-	s := New(string(input))
+	l := New(string(input))
 
 	for i, tt := range tests {
-		token := s.NextToken()
+		token := l.NextToken()
 
 		if token.Type != tt.expectedType {
 			fmt.Println(token.Literal)
