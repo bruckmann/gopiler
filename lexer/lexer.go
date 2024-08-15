@@ -25,11 +25,12 @@ func New(input string) *Lexer {
 // Case we reach the end of the file set current char to zero (ASCII null)
 func (l *Lexer) readChar() {
 	l.currentChar = 0
+
 	if l.readPosition >= len(l.input) {
-	} else {
-		l.currentChar = l.input[l.readPosition]
+		return
 	}
 
+	l.currentChar = l.input[l.readPosition]
 	l.position = l.readPosition
 	l.readPosition += 1
 }
@@ -49,10 +50,10 @@ func (l *Lexer) newDoubleCharToken(tokenType e.TokenType, literal string) e.Toke
 }
 
 func (l *Lexer) createDoubleCharToken(tokenType e.TokenType) e.Token {
-		ch := l.currentChar
-		l.readChar()
-		literal := string(ch) + string(l.currentChar)
-		return l.newDoubleCharToken(tokenType, literal) 
+	ch := l.currentChar
+	l.readChar()
+	literal := string(ch) + string(l.currentChar)
+	return l.newDoubleCharToken(tokenType, literal)
 }
 
 func (l *Lexer) isLetter(ch byte) bool {
@@ -74,14 +75,13 @@ func (l *Lexer) readValue(gf guardianFunction) string {
 	return l.input[position:l.position]
 }
 
-func (l *Lexer) peekChar() byte{
+func (l *Lexer) peekChar() byte {
 
-	if l.readPosition >= len(l.input){
+	if l.readPosition >= len(l.input) {
 		return 0
-	} else {
-		return l.input[l.readPosition]
 	}
 
+	return l.input[l.readPosition]
 }
 
 func (l *Lexer) eatWhitespaces() {
@@ -100,8 +100,8 @@ func (l *Lexer) NextToken() e.Token {
 
 	switch l.currentChar {
 	case '=':
-		if(l.peekChar() == '='){
-			token = l.createDoubleCharToken(e.EQUAL) 
+		if l.peekChar() == '=' {
+			token = l.createDoubleCharToken(e.EQUAL)
 		} else {
 			token = l.newToken(e.ASSIGN, l.currentChar)
 		}
@@ -124,7 +124,7 @@ func (l *Lexer) NextToken() e.Token {
 	case '/':
 		token = l.newToken(e.SLASH, l.currentChar)
 	case '!':
-		if(l.peekChar() == '='){
+		if l.peekChar() == '=' {
 			token = l.createDoubleCharToken(e.NOT_EQUAL)
 		} else {
 			token = l.newToken(e.BANG, l.currentChar)
@@ -144,11 +144,11 @@ func (l *Lexer) NextToken() e.Token {
 			token.Type = e.IsKeywordOrIdentifier(token.Literal)
 			return token
 		} else if l.isDigit(l.currentChar) {
-			  token.Literal = l.readValue(l.isDigit)
-				token.Type = e.INT
-				return token
+			token.Literal = l.readValue(l.isDigit)
+			token.Type = e.INT
+			return token
 		} else {
-				token = l.newToken(enums.ILLEGAL, l.currentChar)
+			token = l.newToken(enums.ILLEGAL, l.currentChar)
 		}
 	}
 
