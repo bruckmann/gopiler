@@ -20,15 +20,15 @@ func Start(in io.Reader, out io.Writer) {
 
 		scanned := scanner.Scan()
 
-    if (!scanned) {
-      return
-    }
+		if !scanned {
+			return
+		}
 
-    line := scanner.Text()
-    l := lexer.New(line)
+		line := scanner.Text()
+		l := lexer.New(line)
 
-    for token := l.NextToken(); token.Type != enums.EOF; token = l.NextToken() {
-      fmt.Fprintf(out, "%+v\n", token)
-    }
+		for token := l.NextToken(); token.Type != enums.EOF; token = l.NextToken() {
+			fmt.Fprintf(out, "%+v\n", token)
+		}
 	}
 }
