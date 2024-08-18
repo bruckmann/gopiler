@@ -1,5 +1,9 @@
 package ast
 
+import "github.com/bruckmann/gopiler/enums"
+
+// !TODO: Refactor to use small modules
+
 type Node interface {
 	TokenLiteral() string
 }
@@ -14,6 +18,29 @@ type Expression interface {
 	Node
 
 	expressionNode()
+}
+
+type Identifier struct {
+	Token enums.Token
+	Value string
+}
+
+func (i *Identifier) expressionNode() {}
+
+func (i *Identifier) TokenLiteral() string { 
+	return i.Token.Literal 
+}
+
+type LetStatment struct {
+	Token enums.Token
+	Name *Identifier
+	Value Expression
+}
+
+func (ls *LetStatment) statmentNode(){}
+
+func (ls *LetStatment) TokenLiteral() string {
+	return ls.Token.Literal
 }
 
 type Program struct {
