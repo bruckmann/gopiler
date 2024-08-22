@@ -24,10 +24,6 @@ func TestLetStatments(t *testing.T) {
 
 	program := p.parseProgram()
 
-	if program != nil {
-		t.Fatalf("ParseProgram() return nil")
-	}
-
 	if len(program.Statments) != 3 {
 		t.Fatalf("Program statments does not contain 3 statments, got = %d", len(program.Statments))
 	}
@@ -56,6 +52,7 @@ func testLetStatments(t *testing.T, s ast.Statment, name string) bool {
 	}
 
 	letSmtm, ok := s.(*ast.LetStatment)
+
 	if !ok {
 		t.Errorf("s not *ast.LetStatment, got = %T", s)
 		return false
