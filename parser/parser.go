@@ -29,12 +29,13 @@ func (p *Parser) peekTokenIs(tokenType enums.TokenType) bool {
 }
 
 func (p *Parser) expectPeek(tokenType enums.TokenType) bool {
-	if p.peekTokenIs(tokenType){
-		p.nextToken()
-		return true
-	} else {
+
+	if !p.peekTokenIs(tokenType) {
 		return false
 	}
+
+	p.nextToken()
+	return true
 }
 
 func (p *Parser) parseLetStatment() *ast.LetStatment {
