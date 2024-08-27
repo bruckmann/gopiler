@@ -36,6 +36,6 @@ An interpreter for Summer language written in Golang.
   go run main.go
 ```
 
-The language and the interpreter was done based on the book "Writing An Interpreter in Go" from Thorsten Ball.
+The language and the interpreter was done only for learning purposes and it was based on the book "Writing An Interpreter in Go" by Thorsten Ball.
 
 
