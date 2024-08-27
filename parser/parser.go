@@ -1,6 +1,8 @@
 package parser
 
 import (
+	"fmt"
+
 	"github.com/bruckmann/gopiler/ast"
 	"github.com/bruckmann/gopiler/enums"
 	"github.com/bruckmann/gopiler/lexer"
@@ -10,6 +12,7 @@ type Parser struct {
 	l            *lexer.Lexer
 	currentToken enums.Token
 	peekToken    enums.Token
+	errors []string
 }
 
 func (p *Parser) nextToken() {
@@ -31,6 +34,7 @@ func (p *Parser) peekTokenIs(tokenType enums.TokenType) bool {
 func (p *Parser) expectPeek(tokenType enums.TokenType) bool {
 
 	if !p.peekTokenIs(tokenType) {
+		p.peekError(tokenType)
 		return false
 	}
 
@@ -86,8 +90,17 @@ func (p *Parser) parseProgram() *ast.Program {
 	return program
 }
 
+func (p *Parser) Errors() []string {
+	return p.errors
+}
+
+func (p *Parser) peekError(tokenType enums.TokenType) {
+	msg := fmt.Sprintf("expected next token to be %s, got %s instead", tokenType, p.peekToken.Type)
+	p.errors = append(p.errors, msg)
+}
+
 func New(l *lexer.Lexer) *Parser {
-	p := &Parser{l: l}
+	p := &Parser{l: l, errors: []string{},}
 
 	p.nextToken()
 
