@@ -64,10 +64,25 @@ func (p *Parser) parseLetStatment() *ast.LetStatment {
 	return stmt
 }
 
+func (p *Parser) parseReturnStatment() *ast.ReturnStatment {
+	stmt := &ast.ReturnStatment{Token: p.currentToken}
+
+	p.nextToken()
+
+	for !p.currentTokenIs(enums.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+
+}
+
 func (p *Parser) parseStatment() ast.Statment {
 	switch p.currentToken.Type {
 	case enums.LET:
 		return p.parseLetStatment()
+	case enums.RETURN:
+		return p.parseReturnStatment()
 	default:
 		return nil
 		
